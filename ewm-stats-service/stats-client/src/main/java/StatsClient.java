@@ -1,4 +1,4 @@
-import EndpointHitDto.EndPointHitDto;
+import EndpointHitDto.EndpointHitDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class StatsClient extends BaseClient{
                 .build());
     }
 
-    public void addHit(EndPointHitDto endPointHitDto) {
-        post("/hit", endPointHitDto);
+    public void addHit(EndpointHitDto endpointHitDto) {
+        post("/hit", endpointHitDto);
     }
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris,
