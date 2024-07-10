@@ -1,15 +1,15 @@
 package repository;
 
-import viewstatsdto.ViewStatsDto;
 import model.EndpointHit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import viewstatsdto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface StatsRepository extends JpaRepository <EndpointHit, Long>{
+public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
     @Query("SELECT new ViewStatsDto(h.app, h.uri, count(h.ip)) " +
             "FROM EndpointHit AS h " +
             "WHERE h.timestamp " +
