@@ -1,7 +1,7 @@
 package service;
 
-import EndpointHitDto.EndpointHitDto;
-import ViewStatsDto.ViewStatsDto;
+import endpointHitDto.EndpointHitDto;
+import viewStatsDto.ViewStatsDto;
 import lombok.RequiredArgsConstructor;
 import mapper.StatsMapper;
 import model.EndpointHit;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import repository.StatsRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

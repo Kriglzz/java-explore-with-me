@@ -1,7 +1,7 @@
 package service;
 
-import ViewStatsDto.ViewStatsDto;
-import EndpointHitDto.EndpointHitDto;
+import viewStatsDto.ViewStatsDto;
+import endpointHitDto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

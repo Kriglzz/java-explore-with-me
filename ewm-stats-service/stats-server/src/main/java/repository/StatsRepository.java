@@ -1,6 +1,6 @@
 package repository;
 
-import ViewStatsDto.ViewStatsDto;
+import viewStatsDto.ViewStatsDto;
 import model.EndpointHit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
