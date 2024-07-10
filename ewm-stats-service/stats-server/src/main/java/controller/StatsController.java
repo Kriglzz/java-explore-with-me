@@ -1,8 +1,8 @@
 package controller;
 
-import viewStatsDto.ViewStatsDto;
+import viewstatsdto.ViewStatsDto;
 import lombok.RequiredArgsConstructor;
-import endpointHitDto.EndpointHitDto;
+import endpointhitdto.EndpointHitDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

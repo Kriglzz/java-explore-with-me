@@ -1,4 +1,4 @@
-package viewStatsDto;
+package viewstatsdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

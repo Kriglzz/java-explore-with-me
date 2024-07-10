@@ -1,7 +1,7 @@
 package service;
 
-import endpointHitDto.EndpointHitDto;
-import viewStatsDto.ViewStatsDto;
+import endpointhitdto.EndpointHitDto;
+import viewstatsdto.ViewStatsDto;
 import lombok.RequiredArgsConstructor;
 import mapper.StatsMapper;
 import model.EndpointHit;

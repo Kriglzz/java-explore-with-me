@@ -1,7 +1,7 @@
 package mapper;
 
 import model.EndpointHit;
-import endpointHitDto.EndpointHitDto;
+import endpointhitdto.EndpointHitDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

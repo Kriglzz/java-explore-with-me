@@ -1,4 +1,4 @@
-package endpointHitDto;
+package endpointhitdto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
