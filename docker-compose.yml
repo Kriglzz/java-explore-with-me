@@ -2,7 +2,7 @@ version: '3.1'
 services:
   stats-server:
     container_name: stats-server
-    build: ewm-stats-service/stats-server
+    build: ./ewm-stats-service/stats-server
     image: ewm-stats-service/stats-server
     ports:
       - "9090:9090"
@@ -25,7 +25,7 @@ services:
 
   ewm-service:
     container_name: emw-service
-    build: ewm-main-service
+    build: ./ewm-main-service
     image: ewm-main-service
     ports:
       - "8080:8080"
