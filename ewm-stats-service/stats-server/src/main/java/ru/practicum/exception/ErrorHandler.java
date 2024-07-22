@@ -1,7 +1,7 @@
-package exception;
+package ru.practicum.exception;
 
 
-import controller.StatsController;
+import ru.practicum.controller.StatsController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,4 +1,4 @@
-package controller;
+package ru.practicum.controller;
 
 import ru.practicum.endpointhitdto.EndpointHitDto;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import service.StatService;
+import ru.practicum.service.StatService;
 import ru.practicum.viewstatsdto.ViewStatsDto;
 
 import java.time.LocalDateTime;

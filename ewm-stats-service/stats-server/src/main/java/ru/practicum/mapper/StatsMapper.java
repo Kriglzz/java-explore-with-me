@@ -1,7 +1,7 @@
-package mapper;
+package ru.practicum.mapper;
 
 import ru.practicum.endpointhitdto.EndpointHitDto;
-import model.EndpointHit;
+import ru.practicum.model.EndpointHit;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

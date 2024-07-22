@@ -1,11 +1,11 @@
-package service;
+package ru.practicum.service;
 
 import ru.practicum.endpointhitdto.EndpointHitDto;
 import lombok.RequiredArgsConstructor;
-import mapper.StatsMapper;
-import model.EndpointHit;
+import ru.practicum.mapper.StatsMapper;
+import ru.practicum.model.EndpointHit;
 import org.springframework.stereotype.Service;
-import repository.StatsRepository;
+import ru.practicum.repository.StatsRepository;
 import ru.practicum.viewstatsdto.ViewStatsDto;
 
 import java.time.LocalDateTime;
@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StatServiceImpl implements StatService {
+
     private final StatsMapper statsMapper;
     private final StatsRepository statsRepository;
 
