@@ -1,12 +1,12 @@
 package service;
 
-import endpointhitdto.EndpointHitDto;
+import ru.practicum.endpointhitdto.EndpointHitDto;
 import lombok.RequiredArgsConstructor;
 import mapper.StatsMapper;
 import model.EndpointHit;
 import org.springframework.stereotype.Service;
 import repository.StatsRepository;
-import viewstatsdto.ViewStatsDto;
+import ru.practicum.viewstatsdto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

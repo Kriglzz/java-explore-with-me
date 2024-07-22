@@ -1,6 +1,6 @@
 package mapper;
 
-import endpointhitdto.EndpointHitDto;
+import ru.practicum.endpointhitdto.EndpointHitDto;
 import model.EndpointHit;
 import org.mapstruct.Mapper;
 

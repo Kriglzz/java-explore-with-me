@@ -1,4 +1,4 @@
-package viewstatsdto;
+package ru.practicum.viewstatsdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

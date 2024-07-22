@@ -1,4 +1,4 @@
-package endpointhitdto;
+package ru.practicum.endpointhitdto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
