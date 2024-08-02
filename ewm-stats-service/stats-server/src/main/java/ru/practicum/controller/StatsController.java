@@ -17,11 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class StatsController {
-    StatService statService;
+    private final StatService statService;
 
     @PostMapping("/hit")
-    public void addHit(@RequestBody @Validated EndpointHitDto endpointHitDto) {
+    public ResponseEntity<EndpointHitDto> addHit(@RequestBody @Validated EndpointHitDto endpointHitDto) {
         statService.addHit(endpointHitDto);
+        return new ResponseEntity<>(endpointHitDto, HttpStatus.OK);
     }
 
     @GetMapping("/stats")
