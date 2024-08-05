@@ -10,19 +10,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
-    @Query("SELECT new ru.practicum.viewstatsdto.ViewStatsDto(h.app, h.uri, count(h.ip)) " +
+    @Query("SELECT new ru.practicum.viewstatsdto.ViewStatsDto(count(h.ip), h.app, h.uri) " +
             "FROM EndpointHit AS h " +
-            "WHERE h.timeStamp " +
-            "BETWEEN :start AND :end AND (:uris IS NULL OR h.uri IN :uris) " +
+            "WHERE h.timestamp " +
+            "BETWEEN :start AND :end AND (COALESCE(:uris, null) IS NULL OR h.uri IN :uris) " +
             "GROUP BY h.app, h.uri " +
             "ORDER BY COUNT(h.ip) DESC")
     List<ViewStatsDto> findAll(@Param("start") LocalDateTime start,
                                @Param("end") LocalDateTime end,
                                @Param("uris") List<String> uris);
 
-    @Query("SELECT new ru.practicum.viewstatsdto.ViewStatsDto(h.app, h.uri, count(DISTINCT h.ip)) " +
+    @Query("SELECT new ru.practicum.viewstatsdto.ViewStatsDto(count(DISTINCT h.ip), h.app, h.uri) " +
             "FROM EndpointHit AS h " +
-            "WHERE h.timeStamp " +
+            "WHERE h.timestamp " +
             "BETWEEN :start AND :end AND (:uris IS NULL OR h.uri IN :uris) " +
             "GROUP BY h.app, h.uri " +
             "ORDER BY COUNT(DISTINCT h.ip) DESC")

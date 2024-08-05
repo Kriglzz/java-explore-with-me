@@ -1,9 +1,6 @@
 package ru.practicum.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +15,7 @@ public class EndpointHit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hit_id")
     private Long id;
 
     private String app;
@@ -26,6 +24,6 @@ public class EndpointHit {
 
     private String ip;
 
-    private LocalDateTime timeStamp;
+    private LocalDateTime timestamp;
 
 }
