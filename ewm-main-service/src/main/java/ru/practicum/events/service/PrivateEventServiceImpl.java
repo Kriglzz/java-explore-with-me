@@ -1,6 +1,5 @@
 package ru.practicum.events.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -49,9 +48,8 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
                                    LocationRepository locationRepository,
                                    EventMapper eventMapper,
                                    RequestRepository requestRepository,
-                                   StatsClient statsClient,
-                                   ObjectMapper objectMapper) {
-        super(requestRepository, statsClient, objectMapper);
+                                   StatsClient statsClient) {
+        super(requestRepository, statsClient);
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
@@ -60,13 +58,12 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
     }
 
     @Override
-    @Transactional
     public EventDto addEvent(Long userId, NewEventDto eventDto) {
         Long categoryId = eventDto.getCategory();
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Категория с id: " + categoryId + " не найдена"));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id: " + userId + " не найден"));
         Location location = locationRepository.save(eventDto.getLocation());
         Event event = eventMapper.newEventDtoToEvent(eventDto, category, user, location);
         event.setCreatedOn(LocalDateTime.now());
@@ -76,17 +73,16 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
     }
 
     @Override
-    @Transactional
     public EventDto updateEvent(Long userId, Long eventId, EventUpdateUser eventUpdateUser) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id: " + userId + " не найден"));
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event " + eventId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Событие с id: " + eventId + " не найдено"));
         if (!event.getInitiator().equals(user)) {
             throw new AccessException("No access");
         }
         if (event.getState().equals(PUBLISHED)) {
-            throw new AccessException("State have to be PENDING or CANCELED");
+            throw new AccessException("Событие должно быть PENDING или CANCELED");
         }
         if (eventUpdateUser.getStateAction() != null) {
             switch (eventUpdateUser.getStateAction()) {
@@ -101,9 +97,9 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
             }
         }
         if (eventUpdateUser.getCategoryId() != null) {
-            Long id = eventUpdateUser.getCategoryId();
-            Category category = categoryRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("Category " + id + " not found"));
+            Long categoryId = eventUpdateUser.getCategoryId();
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new NotFoundException("Пользователь с id: " + categoryId + " не найдена"));
             event.setCategory(category);
         }
         Event updatedEvent = eventMapper.eventToEventUpdateUser(event, eventUpdateUser);
@@ -116,7 +112,6 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EventShortDto> getEventsByUser(Long userId, PageRequest pageRequest) {
         List<Event> events = eventRepository.findAllByInitiatorId(userId, pageRequest);
         if (events == null) {
@@ -133,9 +128,10 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
     @Override
     @Transactional(readOnly = true)
     public EventDto getEventByUserAndEvent(Long userId, Long eventId) {
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
+        userRepository.findById(userId).orElseThrow(()
+                -> new NotFoundException("Пользователь с id: " + userId + " не найден"));
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event " + eventId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Событие с id: " + eventId + " не найдено"));
         List<Event> eventList = List.of(event);
         Map<Long, Long> confirmedRequests = getConfirmedRequests(eventList);
         Map<Long, Long> viewStats = getViewsForEvents(eventList);

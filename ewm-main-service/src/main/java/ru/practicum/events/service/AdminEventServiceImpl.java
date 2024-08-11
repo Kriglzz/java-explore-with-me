@@ -1,6 +1,5 @@
 package ru.practicum.events.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import ru.practicum.events.dto.EventUpdateAdmin;
 import ru.practicum.events.mapper.EventMapper;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.model.EventParams;
-import ru.practicum.events.model.State;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exception.model.NotFoundException;
 import ru.practicum.exception.model.ValidationException;
@@ -27,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ru.practicum.events.model.State.*;
 
 @Service
 public class AdminEventServiceImpl extends EventBase implements AdminEventService {
@@ -43,52 +43,32 @@ public class AdminEventServiceImpl extends EventBase implements AdminEventServic
                                  LocationRepository locationRepository,
                                  EventMapper eventMapper,
                                  RequestRepository requestRepository,
-                                 StatsClient statsClient,
-                                 ObjectMapper objectMapper) {
-        super(requestRepository, statsClient, objectMapper);
+                                 StatsClient statsClient) {
+        super(requestRepository, statsClient);
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
         this.locationRepository = locationRepository;
         this.eventMapper = eventMapper;
     }
 
-    /*@Override
-    public List<EventDto> getAllAdminEvents(EventParams eventParams, PageRequest pageRequest) {
-        Specification<Event> specification = createSpecification(eventParams);
-
-        List<Event> events = eventRepository.findAll(specification, pageRequest).toList();
-        Map<Long, Long> confirmedRequests = getConfirmedRequests(events);
-        Map<Long, Long> viewStats = getViewsForEvents(events);
-
-        return mapEventsToEventDtos(events, confirmedRequests, viewStats);
-    }*/
-
     @Override
-    @Transactional
     public EventDto updateEvent(Long eventId, EventUpdateAdmin eventUpdateAdmin) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event " + eventId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Событие с id: " + eventId + " не найдено."));
 
-        validateEventState(event);
-        validateEventDate(event);
+        if (!event.getState().equals(PENDING)) {
+            throw new ViolationException("Дата события не может быть изменена.");
+        }
+
+        if (LocalDateTime.now().isAfter(event.getEventDate())) {
+            throw new ValidationException("Ошибка даты.");
+        }
 
         updateEventFields(event, eventUpdateAdmin);
         updateEventState(event, eventUpdateAdmin.getStateAction());
 
         Event updatedEvent = eventRepository.save(event);
         return eventMapper.eventToEventDto(updatedEvent, 0L, 0L);
-    }
-
-    private void validateEventState(Event event) {
-        if (!event.getState().equals("PENDING")) {
-            throw new ViolationException("Event data cannot be changed");
-        }
-    }
-
-    private void validateEventDate(Event event) {
-        if (LocalDateTime.now().isAfter(event.getEventDate())) {
-            throw new ValidationException("The start must be no earlier than the publication date");
-        }
     }
 
     private void updateEventFields(Event event, EventUpdateAdmin eventUpdateAdmin) {
@@ -102,7 +82,7 @@ public class AdminEventServiceImpl extends EventBase implements AdminEventServic
 
         if (eventUpdateAdmin.getCategory() != null) {
             Category category = categoryRepository.findById(eventUpdateAdmin.getCategory())
-                    .orElseThrow(() -> new NotFoundException("Category " + eventUpdateAdmin.getCategory() + " not found"));
+                    .orElseThrow(() -> new NotFoundException("Категория " + eventUpdateAdmin.getCategory() + " не найдена"));
             event.setCategory(category);
         }
 
@@ -116,72 +96,19 @@ public class AdminEventServiceImpl extends EventBase implements AdminEventServic
         if (stateAction != null) {
             switch (stateAction) {
                 case "REJECT_EVENT":
-                    event.setState(State.CANCELED);
+                    event.setState(CANCELED);
                     break;
                 case "PUBLISH_EVENT":
                     event.setPublishedOn(LocalDateTime.now());
-                    event.setState(State.PUBLISHED);
+                    event.setState(PUBLISHED);
                     break;
                 default:
-                    throw new ValidationException("There is no such state " + stateAction);
+                    throw new ValidationException("Такого действия не существует - " + stateAction);
             }
         }
     }
 
-    private Specification<Event> createSpecification(EventParams eventParams) {
-        List<Specification<Event>> specifications = new ArrayList<>();
-
-        if (!eventParams.getStates().isEmpty()) {
-            specifications.add(eventStateSpecification(eventParams.getStates()));
-        }
-        if (!eventParams.getUserIds().isEmpty()) {
-            specifications.add(eventInitiatorSpecification(eventParams.getUserIds()));
-        }
-        if (!eventParams.getCategoriesIds().isEmpty()) {
-            specifications.add(eventCategorySpecification(eventParams.getCategoriesIds()));
-        }
-        if (eventParams.getStart() != null) {
-            specifications.add(eventStartDateSpecification(eventParams.getStart()));
-        }
-        if (eventParams.getEnd() != null) {
-            specifications.add(eventEndDateSpecification(eventParams.getEnd()));
-        }
-
-        return specifications.stream().reduce(Specification::and).orElse(null);
-    }
-
-    private Specification<Event> eventStateSpecification(List<State> states) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get("state")).value(states);
-    }
-
-    private Specification<Event> eventInitiatorSpecification(List<Long> userIds) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get("initiator").get("id")).value(userIds);
-    }
-
-    private Specification<Event> eventCategorySpecification(List<Long> categoryIds) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get("category").get("id")).value(categoryIds);
-    }
-
-    private Specification<Event> eventStartDateSpecification(LocalDateTime start) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"), start);
-    }
-
-    private Specification<Event> eventEndDateSpecification(LocalDateTime end) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("eventDate"), end);
-    }
-
-    private List<EventDto> mapEventsToEventDtos(List<Event> events, Map<Long, Long> confirmedRequests, Map<Long, Long> viewStats) {
-        return events.stream()
-                .map(event -> eventMapper.eventToEventDto(
-                        event,
-                        confirmedRequests.getOrDefault(event.getId(), 0L),
-                        viewStats.getOrDefault(event.getId(), 0L)))
-                .collect(Collectors.toList());
-    }
-
-
     @Override
-    @Transactional(readOnly = true)
     public List<EventDto> getAllAdminEvents(EventParams eventParams, PageRequest pageRequest) {
         List<Specification<Event>> specifications = new ArrayList<>();
         if (!eventParams.getStates().isEmpty()) {

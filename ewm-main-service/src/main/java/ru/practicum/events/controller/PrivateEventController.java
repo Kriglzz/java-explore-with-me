@@ -85,8 +85,8 @@ public class PrivateEventController {
     public ResponseEntity<EventRequestStatusUpdateResult> updateStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,
-            @RequestBody @Valid EventRequestStatusUpdateRequest statusUpdateRequest) {
-        EventRequestStatusUpdateResult result = requestService.updateStatus(userId, eventId, statusUpdateRequest);
+            @RequestBody @Valid EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
+        EventRequestStatusUpdateResult result = requestService.updateStatus(userId, eventId, eventRequestStatusUpdateRequest);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
