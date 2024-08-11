@@ -77,16 +77,16 @@ public class PrivateEventController {
 
     @GetMapping("/{eventId}/requests")
     public ResponseEntity<List<ParticipationRequestDto>> getEventRequests(@PathVariable Long userId, @PathVariable Long eventId) {
-        List<ParticipationRequestDto> requests = requestService.getRequestsByUserAndEvent(userId, eventId);
+        List<ParticipationRequestDto> requests = requestService.getEventRequests(userId, eventId);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     @PatchMapping("/{eventId}/requests")
-    public ResponseEntity<EventRequestStatusUpdateResult> updateStatus(
+    public ResponseEntity<EventRequestStatusUpdateResult> updateRequestStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,
             @RequestBody @Valid EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
-        EventRequestStatusUpdateResult result = requestService.updateStatus(userId, eventId, eventRequestStatusUpdateRequest);
+        EventRequestStatusUpdateResult result = requestService.updateRequestStatus(userId, eventId, eventRequestStatusUpdateRequest);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
