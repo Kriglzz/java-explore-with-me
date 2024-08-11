@@ -9,6 +9,7 @@ import ru.practicum.compilations.dto.CompilationDto;
 import ru.practicum.compilations.dto.CompilationUpdateDto;
 import ru.practicum.compilations.dto.NewCompilationDto;
 import ru.practicum.compilations.service.AdminCompilationService;
+import ru.practicum.compilations.service.AdminCompilationServiceImpl;
 
 import javax.validation.Valid;
 
@@ -18,7 +19,7 @@ import javax.validation.Valid;
 @Validated
 public class AdminCompilationController {
 
-    private final AdminCompilationService adminCompilationService;
+    private final AdminCompilationServiceImpl adminCompilationService;
 
     @PostMapping
     public ResponseEntity<CompilationDto> addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDto) {

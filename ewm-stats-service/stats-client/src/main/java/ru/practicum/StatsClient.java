@@ -1,7 +1,10 @@
 package ru.practicum;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.endpointhitdto.EndpointHitDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -35,29 +38,24 @@ public class StatsClient extends BaseClient {
         post("/hit", endpointHitDto);
     }
 
-    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris,
-                                                       Boolean unique) {
-        Map<String, Object> parameters = Map.of(
-                "start", start.format(dateTimeFormatter),
-                "end", end.format(dateTimeFormatter),
-                "uris", String.join(",", uris),
-                "unique", unique
-        );
-
-        ResponseEntity<Object> response = rest.getForEntity("/stats?start={start}&end={end}&uris={uris}&unique={unique}", Object.class, parameters);
-
-        List<Map<String, Object>> data = (List<Map<String, Object>>) response.getBody();
-
-        List<ViewStatsDto> viewStatsDtos = data.stream()
-                .map(item -> {
-                    ViewStatsDto viewStatsDto = new ViewStatsDto();
-                    viewStatsDto.setHits(Long.parseLong(item.get("hits").toString()));
-                    viewStatsDto.setApp(item.get("app").toString());
-                    viewStatsDto.setUri(item.get("uri").toString());
-                    return viewStatsDto;
-                })
-                .collect(Collectors.toList());
-
-        return viewStatsDtos;
+    public List<ViewStatsDto> getStats(String start, String end, List<String> uris, boolean unique) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+                .fromPath("/stats")
+                .queryParam("start", start)
+                .queryParam("end", end)
+                .queryParam("uris", uris)
+                .queryParam("unique", unique);
+        try {
+            ResponseEntity<List<ViewStatsDto>> response = rest.exchange(
+                    uriComponentsBuilder.build().toString(), HttpMethod.GET, null, new ParameterizedTypeReference<>() {}
+            );
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 }

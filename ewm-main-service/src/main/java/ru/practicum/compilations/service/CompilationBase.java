@@ -9,6 +9,7 @@ import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.viewstatsdto.ViewStatsDto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,8 +37,10 @@ class CompilationBase {
         Map<Long, Long> statsMap = new HashMap<>();
 
         if (startDate != null) {
-            List<ViewStatsDto> stats = statsClient.getStats(startDate, LocalDateTime.now(),
-                    new ArrayList<>(eventUrisAndIds.keySet()), true);
+            List<ViewStatsDto> stats = statsClient.getStats(
+                    LocalDateTime.of(2020, 1, 1, 0, 0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.of(2025, 12, 31, 23, 59, 59)
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), List.copyOf(eventUrisAndIds.keySet()), true);
             statsMap = stats.stream().collect(Collectors.toMap(
                     statsDto -> parseEventIdFromUrl(statsDto.getUri()),
                     ViewStatsDto::getHits
@@ -55,18 +58,6 @@ class CompilationBase {
     }
 
     protected Map<Long, Long> getConfirmedRequests(Set<Event> events) {
-        /*if (events.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        List<Long> ids = events.stream().map(Event::getId).collect(Collectors.toList());
-        List<Object[]> results = requestRepository.findByStatus(ids, Status.CONFIRMED);
-
-        return results.stream().collect(Collectors.toMap(
-                result -> (Long) result[0],  // eventId
-                result -> (Long) result[1]   // count
-        ));
-    */
         if (events.isEmpty()) return Collections.emptyMap();
         List<Long> ids = events.stream().map(Event::getId).collect(Collectors.toList());
         List<CountDto> results = requestRepository.findByStatus(ids, CONFIRMED);
