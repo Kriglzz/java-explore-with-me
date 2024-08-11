@@ -12,8 +12,8 @@ import ru.practicum.events.dto.EventUpdateAdmin;
 import ru.practicum.events.model.EventParams;
 import ru.practicum.events.model.State;
 import ru.practicum.events.service.AdminEventService;
-import ru.practicum.exception.model.NotFoundException;
-import ru.practicum.exception.model.ValidationException;
+import ru.practicum.exception.NotFoundException;
+import ru.practicum.exception.ValidationException;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;

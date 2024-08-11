@@ -10,7 +10,7 @@ import ru.practicum.compilations.repository.CompilationRepository;
 import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.mapper.EventMapper;
 import ru.practicum.events.model.Event;
-import ru.practicum.exception.model.NotFoundException;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.requests.repository.RequestRepository;
 
 import java.util.List;

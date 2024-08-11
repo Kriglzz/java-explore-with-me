@@ -3,7 +3,6 @@ package ru.practicum.events.service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsClient;
 import ru.practicum.events.dto.EventDto;
 import ru.practicum.events.dto.EventShortDto;
@@ -11,7 +10,7 @@ import ru.practicum.events.mapper.EventMapper;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.model.UserEventParams;
 import ru.practicum.events.repository.EventRepository;
-import ru.practicum.exception.model.NotFoundException;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.requests.repository.RequestRepository;
 
 import javax.servlet.http.HttpServletRequest;

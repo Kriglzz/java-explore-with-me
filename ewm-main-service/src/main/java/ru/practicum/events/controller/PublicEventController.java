@@ -13,7 +13,7 @@ import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.model.EventSort;
 import ru.practicum.events.model.UserEventParams;
 import ru.practicum.events.service.PublicEventService;
-import ru.practicum.exception.model.ValidationException;
+import ru.practicum.exception.ValidationException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;

@@ -11,7 +11,7 @@ import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.EventUpdateUser;
 import ru.practicum.events.dto.NewEventDto;
 import ru.practicum.events.service.PrivateEventService;
-import ru.practicum.exception.model.ValidationException;
+import ru.practicum.exception.ValidationException;
 import ru.practicum.requests.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
 import ru.practicum.requests.dto.ParticipationRequestDto;
