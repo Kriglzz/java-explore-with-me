@@ -1,5 +1,6 @@
 package ru.practicum.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import ru.practicum.endpointhitdto.EndpointHitDto;
 import ru.practicum.service.StatService;
 import ru.practicum.viewstatsdto.ViewStatsDto;
 
-import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,8 +28,11 @@ public class StatsController {
     public ResponseEntity<List<ViewStatsDto>> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
                                                        LocalDateTime start,
                                                        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                                       @RequestParam(defaultValue = "") List<String> uris,
-                                                       @RequestParam(defaultValue = "false") boolean unique) {
+                                                       @RequestParam(required = false) List<String> uris,
+                                                       @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+        if (start.isAfter(end)) {
+            throw new RuntimeException("Ошибка даты.");
+        }
         List<ViewStatsDto> statsList = statService.getAllStats(start, end, uris, unique);
         return new ResponseEntity<>(statsList, HttpStatus.OK);
     }
