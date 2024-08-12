@@ -8,7 +8,6 @@ import ru.practicum.category.dto.NewCategoryDto;
 
 import java.util.List;
 
-@Service
 public interface CategoryService {
 
     /**
