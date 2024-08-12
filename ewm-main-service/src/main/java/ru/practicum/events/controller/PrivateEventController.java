@@ -1,11 +1,15 @@
 package ru.practicum.events.controller;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.practicum.events.dto.EventDto;
 import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.EventUpdateUser;
@@ -81,7 +85,7 @@ public class PrivateEventController {
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
-    @PatchMapping("/{eventId}/requests")
+    @PatchMapping({"/{eventId}/requests", "/{eventId}/requests/"})
     public ResponseEntity<EventRequestStatusUpdateResult> updateRequestStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,
