@@ -9,10 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.dto.EventDto;
 import ru.practicum.events.dto.EventUpdateAdmin;
-import ru.practicum.events.model.EventParams;
+import ru.practicum.events.model.AdminEventParams;
 import ru.practicum.events.model.State;
 import ru.practicum.events.service.AdminEventService;
-import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
 
 import javax.validation.Valid;
@@ -39,17 +38,13 @@ public class AdminEventController {
                                                             @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         int page = from / size;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.unsorted());
+
         List<State> statesList = states.stream()
-                .map(state -> {
-                    try {
-                        return State.valueOf(state.toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        throw new NotFoundException("Неизвестное состояние: " + state);
-                    }
-                })
+                .map(State::fromString)
                 .collect(Collectors.toList());
+
         List<EventDto> fullDtoList = adminEventService.getAllAdminEvents(
-                new EventParams(users, statesList, categories, rangeStart,
+                new AdminEventParams(users, statesList, categories, rangeStart,
                         rangeEnd), pageRequest);
         return new ResponseEntity<>(fullDtoList, HttpStatus.OK);
     }

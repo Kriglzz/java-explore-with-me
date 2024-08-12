@@ -15,21 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 public class AdminEventParams {
 
-    private List<Long> users;
+    private List<Long> userIds;
 
-    private List<String> states;
+    private List<State> states;
 
-    private List<Long> categories;
+    private List<Long> categoriesIds;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime rangeStart;
+    private LocalDateTime start;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime rangeEnd;
+    private LocalDateTime end;
 
-    @PositiveOrZero
-    private Integer from = 0;
-
-    @Positive
-    private Integer size = 10;
 }

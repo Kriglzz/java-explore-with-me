@@ -9,8 +9,8 @@ import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.events.dto.EventDto;
 import ru.practicum.events.dto.EventUpdateAdmin;
 import ru.practicum.events.mapper.EventMapper;
+import ru.practicum.events.model.AdminEventParams;
 import ru.practicum.events.model.Event;
-import ru.practicum.events.model.EventParams;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
@@ -108,7 +108,7 @@ public class AdminEventServiceImpl extends EventBase implements AdminEventServic
     }
 
     @Override
-    public List<EventDto> getAllAdminEvents(EventParams eventParams, PageRequest pageRequest) {
+    public List<EventDto> getAllAdminEvents(AdminEventParams eventParams, PageRequest pageRequest) {
         List<Specification<Event>> specifications = new ArrayList<>();
         if (!eventParams.getStates().isEmpty()) {
             specifications.add((root, query, criteriaBuilder) -> criteriaBuilder.in(root.get("state"))
