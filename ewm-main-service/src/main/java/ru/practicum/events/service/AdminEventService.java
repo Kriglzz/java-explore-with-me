@@ -4,7 +4,6 @@ import org.springframework.data.domain.PageRequest;
 import ru.practicum.events.dto.EventDto;
 import ru.practicum.events.dto.EventUpdateAdmin;
 import ru.practicum.events.model.AdminEventParams;
-import ru.practicum.events.model.EventParams;
 
 import java.util.List;
 
