@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.endpointhitdto.EndpointHitDto;
+import ru.practicum.exception.InvalidDateRangeException;
 import ru.practicum.service.StatService;
 import ru.practicum.viewstatsdto.ViewStatsDto;
 
@@ -21,7 +22,7 @@ public class StatsController {
     @PostMapping("/hit")
     public ResponseEntity<EndpointHitDto> addHit(@RequestBody @Valid EndpointHitDto endpointHitDto) {
         statService.addHit(endpointHitDto);
-        return new ResponseEntity<>(endpointHitDto, HttpStatus.OK);
+        return new ResponseEntity<>(endpointHitDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/stats")
@@ -31,7 +32,7 @@ public class StatsController {
                                                        @RequestParam(required = false) List<String> uris,
                                                        @RequestParam(required = false, defaultValue = "false") Boolean unique) {
         if (start.isAfter(end)) {
-            throw new RuntimeException("Ошибка даты.");
+            throw new InvalidDateRangeException("Ошибка даты.");
         }
         List<ViewStatsDto> statsList = statService.getAllStats(start, end, uris, unique);
         return new ResponseEntity<>(statsList, HttpStatus.OK);
