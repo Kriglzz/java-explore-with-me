@@ -13,11 +13,12 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    @Query("SELECT r.event.id, COUNT(r.id) " +
+    @Query("SELECT new ru.practicum.events.dto.CountDto(r.event.id, COUNT(r.id) AS count) " +
             "FROM Request AS r " +
-            "WHERE r.status = :status AND r.event.id IN :ids " +
-            "GROUP BY r.event.id")
-    List<CountDto> findByStatus(@Param("ids") List<Long> ids, @Param("status") Status status);
+            "WHERE r.status IS (:status) AND r.event.id IN (:ids) " +
+            "GROUP BY r.event")
+    List<CountDto> findByStatus(@Param("ids") List<Long> ids,
+                                @Param("status") Status status);
 
     List<Request> findAllByRequesterIdAndEventId(Long requesterId, Long eventId);
 
