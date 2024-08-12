@@ -1,6 +1,7 @@
 package ru.practicum.requests.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.model.State;
@@ -27,6 +28,7 @@ import static ru.practicum.requests.model.Status.CONFIRMED;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RequestServiceImpl implements RequestService {
 
     private final UserRepository userRepository;
@@ -66,6 +68,10 @@ public class RequestServiceImpl implements RequestService {
 
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с id: " + eventId + " не найдено."));
+
+        log.info("partLimit={}",event.getParticipantLimit());
+
+        log.info("partLimitrequest={}",requestRepository.countByEventIdAndStatus(eventId, CONFIRMED));
 
         List<Request> requestsToUpdate = requestRepository.findAllById(eventRequestStatusUpdateRequest.getRequestIds());
 

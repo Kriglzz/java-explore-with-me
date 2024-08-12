@@ -8,7 +8,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.endpointhitdto.EndpointHitDto;
@@ -21,19 +20,9 @@ public class StatsClient extends BaseClient {
 
     @Autowired
     public StatsClient(@Value("${statistic-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(createRestTemplate(serverUrl, builder));
-        System.out.println("StatsClient initialized with serverUrl: " + serverUrl);
-    }
-
-    private static RestTemplate createRestTemplate(String serverUrl, RestTemplateBuilder builder) {
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-
-        RestTemplate restTemplate = builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                .requestFactory(() -> requestFactory)
-                .build();
-        System.out.println("RestTemplate created with serverUrl: " + serverUrl);
-        return restTemplate;
+        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
+                .requestFactory(HttpComponentsClientHttpRequestFactory.class)
+                .build());
     }
 
     public void addHit(EndpointHitDto endpointHitDto) {
