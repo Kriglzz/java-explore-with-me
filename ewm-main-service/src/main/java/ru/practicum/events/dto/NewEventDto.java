@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.location.dto.LocationDto;
 import ru.practicum.location.model.Location;
 
 import jakarta.validation.constraints.*;
@@ -31,7 +32,7 @@ public class NewEventDto {
     private LocalDateTime eventDate;
 
     @NotNull
-    private Location location;
+    private LocationDto location;
 
     private Boolean paid = false;
 

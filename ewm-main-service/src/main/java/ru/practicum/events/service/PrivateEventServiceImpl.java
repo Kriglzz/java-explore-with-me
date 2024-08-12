@@ -16,6 +16,7 @@ import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exception.AccessException;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.location.mapper.LocationMapper;
 import ru.practicum.location.model.Location;
 import ru.practicum.location.repository.LocationRepository;
 import ru.practicum.requests.repository.RequestRepository;
@@ -42,11 +43,14 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
 
     private final EventMapper eventMapper;
 
+    private final LocationMapper locationMapper;
+
     public PrivateEventServiceImpl(EventRepository eventRepository,
                                    CategoryRepository categoryRepository,
                                    UserRepository userRepository,
                                    LocationRepository locationRepository,
                                    EventMapper eventMapper,
+                                   LocationMapper locationMapper,
                                    RequestRepository requestRepository,
                                    StatsClient statsClient) {
         super(requestRepository, statsClient);
@@ -55,6 +59,7 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.eventMapper = eventMapper;
+        this.locationMapper = locationMapper;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class PrivateEventServiceImpl extends EventBase implements PrivateEventSe
                 .orElseThrow(() -> new NotFoundException("Категория с id: " + categoryId + " не найдена"));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id: " + userId + " не найден"));
-        Location location = locationRepository.save(eventDto.getLocation());
+        Location location = locationRepository.save(locationMapper.locationDtoToLocation(eventDto.getLocation()));
         Event event = eventMapper.newEventDtoToEvent(eventDto, category, user, location);
         event.setCreatedOn(LocalDateTime.now());
         event.setState(PENDING);

@@ -1,11 +1,10 @@
 package ru.practicum.location.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import jakarta.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -18,8 +17,8 @@ public class Location {
     @Column(name = "location_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+
     private float lat;
-    @Column(nullable = false)
+
     private float lon;
 }
