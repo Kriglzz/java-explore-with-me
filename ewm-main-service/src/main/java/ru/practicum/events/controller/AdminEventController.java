@@ -14,7 +14,7 @@ import ru.practicum.events.model.State;
 import ru.practicum.events.service.AdminEventService;
 import ru.practicum.exception.ValidationException;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

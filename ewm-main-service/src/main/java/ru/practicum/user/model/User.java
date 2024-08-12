@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String userName;
 
     @Column(nullable = false, unique = true)
     private String email;

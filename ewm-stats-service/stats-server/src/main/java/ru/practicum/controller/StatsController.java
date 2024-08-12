@@ -9,7 +9,7 @@ import ru.practicum.endpointhitdto.EndpointHitDto;
 import ru.practicum.service.StatService;
 import ru.practicum.viewstatsdto.ViewStatsDto;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 

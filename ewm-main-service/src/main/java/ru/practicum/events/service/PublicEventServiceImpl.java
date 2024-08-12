@@ -13,7 +13,7 @@ import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.requests.repository.RequestRepository;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 

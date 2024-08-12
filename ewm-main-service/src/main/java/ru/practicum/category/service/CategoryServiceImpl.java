@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto updateCategory(Long categoryId, NewCategoryDto newCategoryDTO) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(()
                 -> new NotFoundException("Категория с id \"" + categoryId + "\" не найдена"));
-        category.setName(newCategoryDTO.getName());
+        category.setCategoryName(newCategoryDTO.getName());
         Category updatedCategory = categoryRepository.save(category);
         return categoryMapper.categoryToCategoryDto(updatedCategory);
     }

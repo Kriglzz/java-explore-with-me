@@ -15,7 +15,7 @@ import ru.practicum.events.model.UserEventParams;
 import ru.practicum.events.service.PublicEventService;
 import ru.practicum.exception.ValidationException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 

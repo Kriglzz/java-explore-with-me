@@ -8,7 +8,7 @@ import ru.practicum.category.model.Category;
 import ru.practicum.location.model.Location;
 import ru.practicum.user.model.User;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 
