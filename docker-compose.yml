@@ -8,14 +8,18 @@ services:
       - "9090:9090"
     depends_on:
       - stats-db
+    restart: on-failure
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
       - SPRING_DATASOURCE_USERNAME=test
       - SPRING_DATASOURCE_PASSWORD=test
+      - STATISTIC_SERVER_URL=http://stats-server:9090
 
   stats-db:
     image: postgres:16.1-alpine
     container_name: stats-db
+    volumes:
+      - /var/lib/postgresql/data/
     ports:
       - "6541:5432"
     environment:
@@ -31,6 +35,7 @@ services:
       - "8080:8080"
     depends_on:
       - ewm-db
+    restart: on-failure
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main
       - SPRING_DATASOURCE_USERNAME=test
@@ -40,6 +45,8 @@ services:
   ewm-db:
     image: postgres:16.1-alpine
     container_name: main_db
+    volumes:
+      - /var/lib/postgresql/data/
     ports:
       - "6542:5432"
     environment:

@@ -1,28 +1,27 @@
 package ru.practicum;
 
-import ru.practicum.endpointhitdto.EndpointHitDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriComponentsBuilder;
+import ru.practicum.endpointhitdto.EndpointHitDto;
+import ru.practicum.viewstatsdto.ViewStatsDto;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class StatsClient extends BaseClient {
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-
     @Autowired
-    public StatsClient(String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${statistic-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .requestFactory(HttpComponentsClientHttpRequestFactory.class)
                 .build());
     }
 
@@ -30,14 +29,25 @@ public class StatsClient extends BaseClient {
         post("/hit", endpointHitDto);
     }
 
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris,
-                                           Boolean unique) {
-        Map<String, Object> parameters = Map.of(
-                "start", start.format(dateTimeFormatter),
-                "end", end.format(dateTimeFormatter),
-                "uris", String.join(",", uris),
-                "unique", unique
-        );
-        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+    public List<ViewStatsDto> getStats(String start, String end, List<String> uris, boolean unique) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+                .fromPath("/stats")
+                .queryParam("start", start)
+                .queryParam("end", end)
+                .queryParam("uris", uris)
+                .queryParam("unique", unique);
+        try {
+            ResponseEntity<List<ViewStatsDto>> response = rest.exchange(
+                    uriComponentsBuilder.build().toString(), HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                    }
+            );
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 }
