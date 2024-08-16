@@ -25,7 +25,7 @@ public class PublicCommentController {
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    @GetMapping("/events/{eventId}")
+    @GetMapping("/events/{eventId}/")
     public ResponseEntity<List<UserCommentDto>> getAllEventComments(@PathVariable Long eventId,
                                                                     @RequestParam(defaultValue = "0") int from,
                                                                     @RequestParam(defaultValue = "10") int size) {

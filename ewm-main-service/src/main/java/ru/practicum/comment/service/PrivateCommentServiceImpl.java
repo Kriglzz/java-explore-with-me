@@ -40,7 +40,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
 
         Long eventId = newCommentDto.getEventId();
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Событие с id: " + eventId + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Событие с id: " + eventId + " не найдено"));
 
         if (!event.getState().equals(PUBLISHED)) {
             throw new NotFoundException("Событие с id " + eventId + " не опубликовано");

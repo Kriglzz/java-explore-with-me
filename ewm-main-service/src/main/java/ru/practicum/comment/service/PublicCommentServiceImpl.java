@@ -10,6 +10,7 @@ import ru.practicum.comment.model.CommentStatus;
 import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.exception.ViolationException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,10 @@ public class PublicCommentServiceImpl implements PublicCommentService {
     public UserCommentDto getCommentById(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Комментарий с id: " + commentId + " не найден"));
+
+        if (comment.getStatus() != CommentStatus.PUBLISHED) {
+            throw new ViolationException("Комментарий должен быть опубликован");
+        }
 
         Long eventId = comment.getEvent().getId();
 

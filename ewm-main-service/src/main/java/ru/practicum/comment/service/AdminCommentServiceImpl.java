@@ -43,8 +43,8 @@ public class AdminCommentServiceImpl implements AdminCommentService {
         String stateAction = updateCommentStatusDto.getStateAction();
         if (stateAction != null) {
             switch (stateAction) {
-                case "REJECT_EVENT" -> comment.setStatus(CANCELED);
-                case "PUBLISH_EVENT" -> comment.setStatus(PUBLISHED);
+                case "REJECT_COMMENT" -> comment.setStatus(CANCELED);
+                case "PUBLISH_COMMENT" -> comment.setStatus(PUBLISHED);
                 default -> throw new ValidationException("Такого действия не существует - " + stateAction);
             }
         }
